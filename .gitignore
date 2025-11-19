@@ -15,10 +15,10 @@ dist/
 .env
 config.py
 
-# Data files (optional - uncomment if you don't want to commit data)
-# *.csv
-# *.xlsx
-# data/
+# Data files
+*.csv
+*.xlsx
+data/
 
 # IDE
 .vscode/

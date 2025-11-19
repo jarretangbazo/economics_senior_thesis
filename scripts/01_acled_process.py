@@ -19,6 +19,10 @@ warnings.filterwarnings('ignore')
 # CONFIGURATION
 # ============================================================================
 
+# ACLED data
+# Download from: https://acleddata.com
+# You'll need: Account and ACLED API
+
 # Data paths
 DATA_DIR = "/Users/jarretangbazo/economics_senior_thesis/data/"
 RAW_DATA_DIR = os.path.join(DATA_DIR, "ACLED_raw_by_year")
@@ -39,6 +43,7 @@ REQUIRED_COLUMNS = [
 # STEP 1: LOAD ACLED DATA
 # ============================================================================
 
+# Data downloaded: JUN-06_2019
 def load_acled_data(raw_data_dir, start_year, end_year):
     """
     Load downloaded ACLED data with validation
