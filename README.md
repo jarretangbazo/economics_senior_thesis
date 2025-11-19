@@ -6,7 +6,7 @@ This repository contains all the code and documentation needed to conduct a rigo
 
 ---
 
-## 📋 Table of Contents
+## Table of Contents
 
 1. [Project Overview](#project-overview)
 2. [Research Question](#research-question)
@@ -20,7 +20,7 @@ This repository contains all the code and documentation needed to conduct a rigo
 
 ---
 
-## 🎯 Project Overview
+## Project Overview
 
 This project examines how exposure to violent conflict during school-age years affects educational attainment in Nigeria. Using a difference-in-differences (DiD) approach, we compare educational outcomes between:
 
@@ -30,15 +30,14 @@ This project examines how exposure to violent conflict during school-age years a
 
 ### Key Features
 
-- ✅ Uses real, publicly available data (ACLED + DHS)
-- ✅ Implements rigorous econometric methods (DiD, event studies, robustness checks)
-- ✅ Includes detailed code documentation and comments
-- ✅ Produces publication-quality figures
-- ✅ Appropriate for undergraduate senior thesis
+- Uses publicly available data (ACLED + DHS)
+- Implements rigorous econometric methods (DiD, event studies, robustness checks)
+- Includes detailed code documentation and comments
+- Produces publication-quality figures
 
 ---
 
-## 🔬 Research Question
+## Research Question
 
 **Main Question**: How has violent conflict in Nigeria affected educational attainment?
 
@@ -49,21 +48,19 @@ This project examines how exposure to violent conflict during school-age years a
 
 ---
 
-## 📊 Data Sources
+## Data Sources
 
 ### 1. ACLED (Armed Conflict Location & Event Data)
 
 - **What**: Geocoded conflict events with dates, locations, and fatalities
 - **Coverage**: Nigeria, 2000-present
-- **Access**: FREE with registration
 - **URL**: https://developer.acleddata.com/
-- **What you need**: Email and API key (instant approval)
+- **What you need**: Email and API key
 
 ### 2. DHS (Demographic and Health Surveys)
 
 - **What**: Individual-level household survey data with education outcomes
 - **Surveys Used**: Nigeria 2003, 2008, 2013, 2018
-- **Access**: FREE with registration (24-hour approval)
 - **URL**: https://dhsprogram.com/data/
 - **What you need**: Research project description and intended use
 
@@ -74,7 +71,7 @@ This project examines how exposure to violent conflict during school-age years a
 
 ---
 
-## 📐 Methodology
+## Methodology
 
 ### Identification Strategy: Difference-in-Differences
 
@@ -115,12 +112,11 @@ We implement multiple specifications for robustness:
 
 ---
 
-## 🚀 Setup Instructions
+## Setup Instructions
 
 ### 1. System Requirements
 
 - **Python**: 3.7 or higher
-- **RAM**: 4GB minimum (8GB recommended)
 - **Storage**: 2GB for data files
 
 ### 2. Install Required Packages
