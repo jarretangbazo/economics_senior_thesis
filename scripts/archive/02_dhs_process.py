@@ -71,8 +71,7 @@ def load_dhs_individual(filepath, survey_year):
     
     try:
         # Read Stata file
-        # FIXED: convert_categoricals=False prevents errors with duplicate value labels in older DHS files
-        df = pd.read_stata(filepath, convert_categoricals=False)
+        df = pd.read_stata(filepath)
         print(f"  Loaded {len(df)} individuals")
         
         # Extract key variables (standard DHS variable names)
@@ -90,7 +89,7 @@ def load_dhs_individual(filepath, survey_year):
             'v011': 'birth_date_cmc',
             'v012': 'age',
             'v013': 'age_5year',
-            'v024': 'state_code',  # FIXED: Removed duplicate - this is state/region code
+            'v024': 'region',  # State/region
             'v025': 'urban_rural',
             'v106': 'education_level',
             'v107': 'years_education',
@@ -105,6 +104,7 @@ def load_dhs_individual(filepath, survey_year):
             'v714': 'husband_occupation',
             'v715': 'respondent_occupation',
             'v717': 'respondent_employed',
+            'v024': 'state_code',
             'v023': 'stratification',
         }
         
@@ -253,11 +253,6 @@ def add_geographic_info(df, geo_filepath=None):
         print(f"  Mapped {df['state'].notna().sum()} observations to states")
     elif 'region' in df.columns:
         df['state'] = df['region'].map(state_codes)
-    
-    # IMPORTANT: In 2003 DHS, 'region' represents geopolitical ZONES (6 regions),
-    # not individual states (36 states). The 'state' variable created above actually 
-    # contains zone names (North Central, North East, etc.), not state names (Borno, Kano, etc.).
-    # For true LGA-level analysis, you need GPS coordinates file from DHS.
     
     # For LGA-level analysis, you need the DHS GPS dataset
     # This requires special permission from DHS
