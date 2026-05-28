@@ -44,7 +44,11 @@ data/processed/
 #   git add -f docs/thesis.pdf
 # =============================================================================
 output/
-docs/
+
+# docs/ — only track docs/final/
+docs/*
+!docs/final/
+!docs/final/**
 
 # Microsoft Office temporary lock files
 ~$*
