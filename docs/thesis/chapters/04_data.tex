@@ -1,0 +1,121 @@
+% ============================================================
+%  chapters/04_data.tex
+% ============================================================
+
+\section{Data}
+\label{sec:data}
+
+\subsection{Nigeria Education Data Survey (NEDS)}
+
+The primary data for this paper come from the 2010 Nigeria Education Data
+Survey (NEDS). The survey was conducted by the National Population Commission
+(NPC), the Federal Ministry of Education (FMOE), and the Universal Basic
+Education Commission (UBEC), with technical assistance from RTI
+International and joint funding from the United States Agency for
+International Development (USAID) and the UK Department for International
+Development (DFID). The objectives of the 2010 NEDS include
+\citep{neds2010}:
+
+\begin{itemize}
+    \item Providing data on the schooling status of Nigerian children of
+          basic education age, including factors influencing whether children
+          ever enroll in school and why students drop out
+    \item Measuring parent attitudes toward schooling quality and providing
+          an understanding of the attitudes that shape willingness to send
+          children to school
+    \item Measuring the frequency of student absenteeism and reasons for
+          missing school
+    \item Providing data that allow for trend analysis and state-level
+          comparisons
+\end{itemize}
+
+The survey targeted children aged 4--16 with a focus on the household-level
+factors affecting education consumption decisions. Data collection was
+conducted across all 36 states and the Federal Capital Territory (Abuja)
+from April to July 2010. In total, 26,934 households were interviewed,
+yielding information on 71,567 children.
+
+\subsection{Uppsala Conflict Data Program (UCDP)}
+
+The violence data were collected by Uppsala University as part of the
+Uppsala Conflict Database Program. The program's purpose is to provide
+comprehensive event-level data on all organized violence since 1989. An
+event is defined as ``any incidence where there is a use of armed force by
+an organized actor against another organized actor or civilians, which
+results in at least one direct death at a specific location and for a
+specific temporal duration'' \citep{sundberg2010}.\footnote{See
+Appendix~\ref{app:violence_defs} for complete UCDP definitions of key
+terms including organized actor, direct death, and event types.} Uppsala
+University maintains accuracy in the dataset through a four-step data
+collection process involving systematic searches of major newswires and
+databases, review of secondary materials, consultation with regional
+experts, and final review by program directors.\footnote{See
+Appendix~\ref{app:ucdp_process} for a description of the four-step data
+collection process.}
+
+The dataset records date(s), event type, violence type, location details
+(town, province, and latitude/longitude coordinates), actors involved, and
+deaths for each side as well as civilian and unknown deaths. Events are
+classified as single-day, summary, or continuous events. Violence types are
+categorized as state-based, non-state, or one-sided violence. For this
+study, I use all events recorded in Nigeria from 1999 to 2010.
+
+\subsection{Linking the Datasets}
+
+In order to link the household survey data with the violence data, I matched
+records using state and LGA identifiers present in both datasets. Some
+observations in the violence dataset did not contain LGA-level information
+and were therefore excluded from the matched sample. Summary statistics for
+the key variables used in the analysis are presented in
+Table~\ref{tab:summary_stats}.
+
+% ---- Placeholder for summary statistics table ---------------
+% Once you have your data cleaned and merged, export a summary
+% statistics table from Python/Stata and include it here.
+% See the LaTeX tables guide in main.tex for formatting.
+
+\begin{table}[H]
+    \centering
+    \caption{Summary Statistics}
+    \label{tab:summary_stats}
+    \begin{threeparttable}
+        \begin{tabular}{lcccc}
+            \toprule
+            Variable & Mean & Std. Dev. & Min & Max \\
+            \midrule
+            \multicolumn{5}{l}{\textit{Panel A: Outcomes}} \\[0.3em]
+            Currently enrolled (\textit{attend}) & & & 0 & 1 \\
+            Years of schooling (\textit{highest\_enrolled}) & & & 0 & \\[0.5em]
+            \multicolumn{5}{l}{\textit{Panel B: Violence Exposure}} \\[0.3em]
+            Violence: pre-birth ($-$17 to $-$9 months) & & & 0 & 1 \\
+            Violence: in utero (0–9 months pre-birth) & & & 0 & 1 \\
+            Violence: early childhood (ages 0–3) & & & 0 & 1 \\
+            Violence: preschool (ages 3–6) & & & 0 & 1 \\
+            Violence: primary school (ages 6–12) & & & 0 & 1 \\
+            Violence: junior secondary (ages 12–15) & & & 0 & 1 \\
+            Violence: senior secondary (ages 15–18) & & & 0 & 1 \\[0.5em]
+            \multicolumn{5}{l}{\textit{Panel C: Individual Controls}} \\[0.3em]
+            Male & & & 0 & 1 \\
+            Age & & & & \\
+            Urban & & & 0 & 1 \\
+            Wealth quintile & & & 1 & 5 \\
+            Distance to primary school (km) & & & & \\
+            Mother attended school & & & 0 & 1 \\
+            Father attended school & & & 0 & 1 \\
+            \midrule
+            Observations & \multicolumn{4}{c}{[N]} \\
+            \bottomrule
+        \end{tabular}
+        \begin{tablenotes}
+            \small
+            \item \textit{Notes:} Summary statistics for the analysis
+            sample. Violence indicators are binary variables equal to 1 if
+            the child's LGA experienced at least one UCDP-recorded violent
+            event during the specified age window.
+            Violence exposure is assigned based on the child's LGA of
+            residence and the start date of the first UCDP event in that
+            LGA. See Section~\ref{sec:methodology} for details on variable
+            construction.
+        \end{tablenotes}
+    \end{threeparttable}
+\end{table}

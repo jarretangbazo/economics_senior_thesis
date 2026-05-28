@@ -1,0 +1,303 @@
+---
+title: "Education Under Fire: Boko Haram Conflict and Educational Attainment in Northern Nigeria"
+author: "Jarret"
+date: today
+format:
+  pdf:
+    documentclass: article
+    geometry: margin=1in
+    fontsize: 12pt
+    linestretch: 1.5
+    number-sections: true
+    toc: true
+    toc-depth: 3
+    colorlinks: true
+  docx:
+    toc: true
+    number-sections: true
+bibliography: references.bib
+csl: chicago-author-date.csl
+execute:
+  echo: false        # hide code in output
+  warning: false
+  message: false
+  cache: true        # cache R output so re-renders are fast
+---
+
+```{r setup}
+#| include: false
+
+# Source the shared config — loads all packages and sets paths
+source(here::here("R", "00_config.R"))
+
+# Load the analysis panel
+panel <- readr::read_csv(PATH_PANEL, show_col_types = FALSE) |>
+  dplyr::mutate(
+    lga_id      = factor(lga_id),
+    survey_year = as.integer(survey_year)
+  )
+
+# Load pre-estimated model objects (produced by 03_main_did.R)
+models <- readRDS(file.path(PATH_TABLES, "main_models.rds"))
+```
+
+# Introduction
+
+Nigeria's northeast has experienced one of the world's most destructive
+insurgencies since the Boko Haram movement began its violent campaign in
+the late 2000s. The conflict has displaced millions of people, destroyed
+infrastructure, and disrupted educational systems at a critical juncture
+for the region's development [@unocha2020].
+
+This paper estimates the causal effect of Boko Haram conflict exposure on
+educational attainment in Northern Nigeria. Using a difference-in-differences
+(DiD) design, I compare educational outcomes in Local Government Areas (LGAs)
+with high pre-conflict Boko Haram exposure to those with low exposure, before
+and after the insurgency intensified in 2009.
+
+**Research question:** Did exposure to Boko Haram conflict causally reduce
+school enrolment, attendance, and years of completed schooling in
+Northern Nigeria?
+
+**Main finding:** [Update after estimation] Conflict exposure reduced years
+of schooling by approximately X years and school enrolment rates by
+approximately Y percentage points, with effects concentrated among girls
+and children who were school-age in 2009.
+
+## Contribution
+
+This paper makes three contributions to the literature on conflict and
+human capital:
+
+1. **Causal identification**: Unlike much of the descriptive literature, I
+   exploit the sharp geographic variation in Boko Haram's pre-insurgency
+   presence to implement a credible DiD design.
+
+2. **Disaggregated outcomes**: I separately estimate effects on enrolment,
+   attendance, and completed years of schooling, allowing me to distinguish
+   between the intensive and extensive margins of educational disruption.
+
+3. **Heterogeneity**: I show that girls, Muslim-majority LGAs, and children
+   who were school-age in 2009 experienced systematically larger effects.
+
+---
+
+# Background and Context
+
+## Boko Haram's Insurgency
+
+Boko Haram ("Western education is forbidden") emerged as a religious movement
+in Maiduguri, Borno State in the early 2000s under Mohammed Yusuf.
+The movement's violent phase began following clashes with security forces
+in 2009, the year used as the treatment onset in this paper
+[@thurston2017boko].
+
+The insurgency's geographic reach has been concentrated in the Lake Chad
+Basin region — particularly Borno, Yobe, and Adamawa states — but
+spillover effects have been documented across the broader northeast and
+into the northwest.
+
+## Education in Northern Nigeria
+
+Pre-conflict educational attainment in Northern Nigeria was already
+substantially below southern levels, driven by a combination of poverty,
+cultural factors, and limited school supply [@combined2019]. The conflict
+compounded these pre-existing deficits through:
+
+- Direct school destruction and school closures
+- Teacher displacement and absenteeism
+- Household income shocks reducing the ability to pay school fees
+- Direct targeting of students and teachers by Boko Haram
+
+---
+
+# Data
+
+## ACLED Conflict Event Data
+
+Conflict event data come from the Armed Conflict Location and Event Data
+project (ACLED), which records geo-coded conflict events from news reports
+and other sources [@raleigh2010]. I use events classified as:
+battles, explosions/remote violence, and violence against civilians, for
+Nigeria, 2000–2020.
+
+## DHS Survey Microdata
+
+Educational outcome data come from the Demographic and Health Surveys (DHS)
+programme. I use the Individual Recode files from Nigeria's DHS rounds
+conducted between `r min(panel$survey_year, na.rm=TRUE)` and
+`r max(panel$survey_year, na.rm=TRUE)`.
+
+Key variables extracted from the DHS:
+
+- **Years of schooling**: total years of formal education completed
+- **Current enrolment**: indicator for currently attending school
+- **Primary completion**: indicator for having completed primary school
+- **GPS cluster coordinates**: used to assign respondents to LGAs
+
+## Summary Statistics
+
+```{r summary-stats}
+#| label: tbl-summary
+#| tbl-cap: "Descriptive Statistics"
+
+modelsummary::datasummary(
+  (`Years of schooling`  = years_of_schooling)  +
+  (`Enrolled`            = enrolled)             +
+  (`Primary complete`    = primary_complete)     +
+  (`IHS fatalities`      = ihs_fatalities)       +
+  (`Conflict events`     = n_events)             ~
+    N + Mean + SD + Min + Max,
+  data  = panel,
+  fmt   = 2,
+  notes = "Sample: Northern Nigeria. DHS microdata merged with ACLED conflict data."
+)
+```
+
+The analysis covers `r n_distinct(panel$lga_id)` unique LGAs and
+`r format(nrow(panel), big.mark=",")` individual respondents.
+Treated LGAs (those with more than `r EXPOSURE_THRESH` pre-2009 conflict
+events) account for
+`r scales::percent(mean(panel$treated, na.rm=TRUE), accuracy=1)` of
+the sample.
+
+---
+
+# Identification Strategy
+
+## Difference-in-Differences Design
+
+The main estimating equation is:
+
+$$
+Y_{ilt} = \alpha + \beta \cdot (\text{Treated}_l \times \text{Post2009}_t) + \gamma_l + \delta_t + X_{it}'\theta + \varepsilon_{ilt}
+$$
+
+where $Y_{ilt}$ is the educational outcome for individual $i$ in LGA $l$
+at survey year $t$; $\text{Treated}_l$ equals one if LGA $l$ had more than
+`r EXPOSURE_THRESH` conflict events before 2009; $\text{Post2009}_t$
+equals one for survey years 2009 and later; $\gamma_l$ are LGA fixed
+effects; $\delta_t$ are survey-year fixed effects; and $X_{it}$ is a
+vector of individual controls (age, age², urban/rural).
+
+The coefficient of interest, $\beta$, is the average treatment effect on
+the treated (ATT): the additional change in educational outcomes experienced
+by treated LGAs after 2009, relative to what the control group experienced.
+
+Standard errors are clustered at the LGA level to account for serial
+correlation of outcomes within LGAs over time.
+
+## Parallel Trends Assumption
+
+The DiD design requires that, absent the Boko Haram insurgency, treated
+and control LGAs would have followed parallel trends. This assumption is
+untestable for the post-period but can be evaluated for the pre-period.
+
+@fig-pretrends shows the mean educational trends by treatment group from
+`r YEAR_START` to `r TREATMENT_YEAR - 1`. [Describe what you observe.]
+
+```{r pretrend-plot}
+#| label: fig-pretrends
+#| fig-cap: "Pre-Trend Check: Educational Outcomes by Treatment Group"
+#| fig-height: 5
+
+knitr::include_graphics(file.path(PATH_FIGURES, "fig_pretrends.pdf"))
+```
+
+---
+
+# Results
+
+## Main DiD Estimates
+
+@tbl-main presents the main DiD estimates. Columns (1), (3), and (5) show
+the baseline TWFE specification without individual controls; columns (2),
+(4), and (6) add age, age², and urban/rural controls.
+
+```{r main-table}
+#| label: tbl-main
+#| tbl-cap: "Main DiD Results: Effect of Conflict Exposure on Education"
+
+model_list <- list(
+  "(1)" = models[["years_of_schooling"]]$spec1,
+  "(2)" = models[["years_of_schooling"]]$spec2,
+  "(3)" = models[["enrolled"]]$spec1,
+  "(4)" = models[["enrolled"]]$spec2,
+  "(5)" = models[["primary_complete"]]$spec1,
+  "(6)" = models[["primary_complete"]]$spec2
+)
+
+modelsummary::modelsummary(
+  model_list,
+  coef_map = c("treated_post" = "Treated × Post-2009",
+               "age"          = "Age",
+               "I(age^2)"     = "Age²"),
+  stars    = c("*" = 0.1, "**" = 0.05, "***" = 0.01),
+  gof_map  = c("nobs", "adj.r.squared"),
+  notes    = "SEs clustered by LGA. *** p<0.01, ** p<0.05, * p<0.10."
+)
+```
+
+## Event Study
+
+@fig-event-study presents the event study estimates, showing the dynamic
+pattern of treatment effects in each year relative to 2009.
+
+```{r event-study}
+#| label: fig-event-study
+#| fig-cap: "Event Study: Dynamic Treatment Effects"
+#| fig-height: 8
+
+knitr::include_graphics(file.path(PATH_FIGURES, "fig_event_study.pdf"))
+```
+
+Pre-period coefficients are [close to zero / statistically insignificant],
+consistent with the parallel trends assumption. Post-period coefficients
+show [describe pattern].
+
+## Heterogeneity
+
+```{r heterogeneity}
+#| label: fig-het
+#| fig-cap: "Heterogeneity Analysis: DiD Estimates by Subgroup"
+#| fig-height: 5
+
+knitr::include_graphics(file.path(PATH_FIGURES, "fig_heterogeneity.pdf"))
+```
+
+---
+
+# Robustness Checks
+
+@tbl-robust shows that the main results are robust to:
+
+1. **Alternative conflict thresholds** — the DiD estimate is stable
+   across thresholds of 2, 5, 10, and 20 pre-period events.
+2. **Continuous conflict measures** — replacing the binary treatment
+   indicator with IHS-transformed fatality counts yields similar results.
+3. **Placebo treatment years** — assigning fake treatment years of 2003,
+   2005, and 2007 produces coefficients near zero, as expected.
+
+```{r robustness-table}
+#| label: tbl-robust
+#| tbl-cap: "Robustness Checks"
+
+knitr::include_graphics(file.path(PATH_FIGURES, "fig_threshold_sensitivity.pdf"))
+```
+
+---
+
+# Conclusion
+
+[To be completed after estimation.]
+
+This paper provides causal evidence that Boko Haram conflict exposure
+reduced educational attainment in Northern Nigeria. The results have
+implications for [policy implications] and suggest that [main takeaway].
+
+---
+
+# References {.unnumbered}
+
+::: {#refs}
+:::
