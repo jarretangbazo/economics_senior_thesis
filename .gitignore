@@ -44,7 +44,18 @@ data/processed/
 #   git add -f docs/thesis.pdf
 # =============================================================================
 output/
-docs/thesis.pdf
+docs/
+
+# Microsoft Office temporary lock files
+~$*
+
+# Word documents and PDFs in docs/ (use thesis.qmd as source of truth)
+# Commit docs/thesis.pdf manually only at milestones: git add -f docs/thesis.pdf
+docs/*.docx
+docs/*.pdf
+docs/thesis/*.docx
+docs/thesis/*.pdf
+
 
 # =============================================================================
 # SENSITIVE FILES
@@ -152,6 +163,11 @@ docs/.quarto/
 *~
 tmp/
 temp/
+requirements_pinned.txt
+~$*
+
+
+
 
 # =============================================================================
 # EXCEPTIONS — keep these tracked even if parent dirs are ignored
