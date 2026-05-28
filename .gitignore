@@ -1,0 +1,175 @@
+# =============================================================================
+# .gitignore — Education Under Fire
+# =============================================================================
+
+# =============================================================================
+# DATA — never commit (DHS and ACLED distribution is license-restricted)
+# =============================================================================
+data/raw/
+data/processed/
+
+# Tabular data
+*.csv
+*.CSV
+*.xlsx
+*.xls
+*.sav
+*.dta
+*.DTA
+
+# Binary / columnar formats
+*.feather
+*.parquet
+*.h5
+*.hdf5
+*.db
+*.sqlite
+
+# Shapefiles and GIS
+*.shp
+*.shx
+*.dbf
+*.prj
+*.geojson
+
+# Archives
+*.zip
+*.tar
+*.tar.gz
+*.7z
+
+# =============================================================================
+# OUTPUTS — reproducible from code, not committed
+# Exception: thesis.pdf committed manually at milestone versions only
+#   git add -f docs/thesis.pdf
+# =============================================================================
+output/
+docs/thesis.pdf
+
+# =============================================================================
+# SENSITIVE FILES
+# =============================================================================
+.env
+.env.local
+*.env
+*.key
+*.pem
+secrets/
+credentials.json
+config.ini
+secrets.json
+api_keys.txt
+*_api_key*
+*_secret*
+*_password*
+
+# =============================================================================
+# PYTHON
+# =============================================================================
+__pycache__/
+*.py[cod]
+*.so
+*.pyo
+*.egg
+*.egg-info/
+.eggs/
+.installed.cfg
+build/
+dist/
+.venv/
+venv/
+env/
+ENV/
+.pytest_cache/
+.mypy_cache/
+htmlcov/
+.coverage
+.coverage.*
+.cache/
+
+# Jupyter — strip outputs before committing with nbstripout
+# Install: pip install nbstripout && nbstripout --install
+.ipynb_checkpoints/
+*/.ipynb_checkpoints/*
+
+# =============================================================================
+# R
+# =============================================================================
+.Rhistory
+.RData
+.Rproj.user/
+*.Rcheck/
+*.tar.gz
+
+# renv: lockfile (renv.lock) IS committed; local cache is not
+renv/library/
+renv/staging/
+.Rprofile.renv
+
+# =============================================================================
+# QUARTO / LATEX BUILD ARTIFACTS
+# =============================================================================
+docs/_freeze/
+docs/.quarto/
+*.aux
+*.bbl
+*.blg
+*.fls
+*.fdb_latexmk
+*.lof
+*.log
+*.lot
+*.out
+*.synctex.gz
+*.toc
+
+# =============================================================================
+# MACOS
+# =============================================================================
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+.Spotlight-V100
+.Trashes
+.fseventsd
+.TemporaryItems
+
+# =============================================================================
+# VS CODE
+# =============================================================================
+.vscode/
+.idea/
+*.code-workspace
+
+# =============================================================================
+# MISCELLANEOUS
+# =============================================================================
+*.swp
+*.swo
+*.tmp
+*.temp
+*~
+tmp/
+temp/
+
+# =============================================================================
+# EXCEPTIONS — keep these tracked even if parent dirs are ignored
+# =============================================================================
+!.gitkeep
+!data/README.md
+
+# =============================================================================
+# NOTES
+# To track a file that would otherwise be ignored:
+#   git add -f filename.ext
+#
+# To stop tracking a file already committed:
+#   git rm --cached filename
+#   git rm -r --cached directory/
+#
+# Never commit:
+#   1. Raw DHS or ACLED data — distribution is license-restricted
+#   2. Any personally identifiable information (PII)
+#   3. API keys or credentials of any kind
+# =============================================================================

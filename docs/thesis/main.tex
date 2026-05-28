@@ -1,0 +1,176 @@
+% ============================================================
+%  main.tex  —  Master file
+%  Education Under Fire: Conflict Exposure and Educational
+%  Attainment in Northern Nigeria
+%  Jarret Angbazo
+% ============================================================
+
+\documentclass[12pt, letterpaper]{article}
+
+% ---- Packages -----------------------------------------------
+\usepackage[margin=1in]{geometry}       % 1-inch margins
+\usepackage{setspace}                   % Line spacing
+\usepackage{fontenc}                    % Font encoding
+\usepackage{inputenc}                   % UTF-8 input
+\usepackage{microtype}                  % Better text justification
+\usepackage{amsmath, amssymb}           % Math environments
+\usepackage{booktabs}                   % Professional tables (\toprule etc.)
+\usepackage{longtable}                  % Tables that span multiple pages
+\usepackage{tabularx}                   % Auto-width table columns
+\usepackage{multirow}                   % Multi-row table cells
+\usepackage{siunitx}                    % Align numbers in tables by decimal
+\usepackage{threeparttable}             % Table notes
+\usepackage{graphicx}                   % \includegraphics
+\usepackage{float}                      % [H] figure placement
+\usepackage{subcaption}                 % Side-by-side figures
+\usepackage{caption}                    % Caption customization
+\usepackage{hyperref}                   % Clickable links and citations
+\usepackage[round, authoryear]{natbib}  % Author-year citations (econometrics style)
+\usepackage{appendix}                   % \begin{appendices}
+\usepackage{titlesec}                   % Section title formatting
+\usepackage{abstract}                   % Abstract formatting
+\usepackage{fancyhdr}                   % Headers and footers
+\usepackage{pdflscape}                  % Landscape pages for wide tables
+\usepackage{rotating}                   % Rotated figures/tables
+
+% ---- Hyperref setup -----------------------------------------
+\hypersetup{
+    colorlinks  = true,
+    linkcolor   = black,
+    citecolor   = black,
+    urlcolor    = blue,
+    pdftitle    = {Education Under Fire},
+    pdfauthor   = {Jarret Angbazo},
+}
+
+% ---- Line spacing -------------------------------------------
+\doublespacing                          % Double-space body text
+
+% ---- Caption formatting -------------------------------------
+\captionsetup{
+    font        = small,
+    labelfont   = bf,
+    format      = hang,
+    width       = 0.9\textwidth,
+}
+
+% ---- Header/footer ------------------------------------------
+\pagestyle{fancy}
+\fancyhf{}
+\setlength{\headheight}{13.6pt}
+\rhead{\small Angbazo}
+\lhead{\small Education Under Fire}
+\cfoot{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+% ---- Section title formatting -------------------------------
+\titleformat{\section}[block]
+    {\normalfont\large\bfseries}
+    {\Roman{section}.}{0.5em}{}
+
+\titleformat{\subsection}[block]
+    {\normalfont\normalsize\bfseries\itshape}
+    {\Alph{subsection}.}{0.5em}{}
+
+% ---- Figure and table paths ---------------------------------
+% Store figures in thesis/figures/ and tables in thesis/tables/
+% Use \includegraphics{figures/fig_name} throughout
+\graphicspath{{figures/}}
+
+% ============================================================
+\begin{document}
+
+% ---- Title page ---------------------------------------------
+\begin{titlepage}
+    \begin{center}
+        \vspace*{1in}
+
+        {\LARGE\bfseries Education Under Fire}\\[0.5em]
+        {\large Conflict Exposure and Educational Attainment in Northern Nigeria}
+
+        \vspace{1.5in}
+
+        {\large Economics Department Undergraduate Honors Thesis}\\[0.5em]
+        {\large By}\\[0.5em]
+        {\large\bfseries Jarret Angbazo}
+
+        \vspace{1in}
+
+        {\large Advised by}\\[0.5em]
+        {\large Dr. Jessica Goldberg}
+
+        \vspace{1in}
+
+        {\large University of Maryland, College Park}\\[0.3em]
+        {\large Department of Economics}\\[0.5em]
+        {\large May 14, 2013}
+
+        \vspace{1in}
+
+        \begin{abstract}
+            \singlespacing
+            % Replace with your final abstract — 150-250 words
+            This paper examines the effect of violent conflict on the
+            educational attainment and school enrollment of children in
+            Nigeria. Using data from the 2010 Nigeria Education Data Survey
+            (NEDS) and geocoded violence data from the Uppsala Conflict Data
+            Program (UCDP) spanning 1999--2010, I estimate OLS models with
+            and without LGA fixed effects to identify whether exposure to
+            violence at different stages of childhood affects the probability
+            of school enrollment and the number of years of schooling
+            completed. I find that exposure to violence during early childhood
+            (ages 0--3) and preschool age (3--6) is associated with a
+            reduced likelihood of current school enrollment, while the effects
+            on total years of schooling are mixed and sensitive to model
+            specification. Results confirm well-documented gender and
+            urban-rural disparities in educational attainment. These findings
+            motivate continued investment in school access and protection of
+            education during conflict.
+
+            \vspace{0.5em}
+            \noindent\textbf{Keywords:} conflict, education, Nigeria, Boko
+            Haram, school enrollment, UCDP, OLS, fixed effects
+        \end{abstract}
+    \end{center}
+\end{titlepage}
+
+% ---- Table of contents --------------------------------------
+\tableofcontents
+\newpage
+
+% ---- List of tables and figures (add once populated) --------
+% \listoftables
+% \listoffigures
+% \newpage
+
+% ============================================================
+%  CHAPTERS  —  each \input pulls in a separate .tex file
+% ============================================================
+
+\input{chapters/01_introduction}
+\input{chapters/02_background}
+\input{chapters/03_literature_review}
+\input{chapters/04_data}
+\input{chapters/05_methodology}
+\input{chapters/06_results}
+\input{chapters/07_conclusion}
+
+% ============================================================
+%  REFERENCES
+% ============================================================
+
+\newpage
+\bibliographystyle{apalike}         % Author-year, common in economics
+\bibliography{references}           % Reads references.bib
+
+% ============================================================
+%  APPENDICES
+% ============================================================
+
+\newpage
+\begin{appendices}
+    \input{chapters/appendix_A}     % Variable definitions / data appendix
+    \input{chapters/appendix_B}     % Additional regression tables
+\end{appendices}
+
+\end{document}

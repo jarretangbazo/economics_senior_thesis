@@ -1,0 +1,179 @@
+% ============================================================
+%  chapters/06_results.tex
+% ============================================================
+
+\section{Results}
+\label{sec:results}
+
+\subsection{School Enrollment}
+\label{sec:results_attend}
+
+Table~\ref{tab:attend_results} presents OLS estimates of
+Equation~\eqref{eq:attend} (Column 1) and Equation~\eqref{eq:attend_fe}
+with LGA fixed effects (Column 2) for the \textit{attend} outcome.
+
+Looking at the baseline OLS results (Column 1), the violence indicators
+statistically significant at conventional levels are exposure during early
+childhood (ages 0--3), preschool age (3--6), and primary school age
+(6--12). The coefficient on \textit{viol\_ech} is $-0.022$ ($p < 0.01$),
+on \textit{viol\_ps} is $-0.049$ ($p < 0.001$), and on \textit{viol\_prim}
+is $+0.019$ ($p < 0.01$). These estimates indicate that children exposed to
+violence at younger ages are less likely to be currently enrolled in school,
+while children who experienced violence during primary school age exhibit a
+counterintuitive positive association with current enrollment. The remaining
+violence variables carry positive coefficients except for
+\textit{viol\_SS}, which is negative, though none are statistically
+significant. Pre-birth violence exposure shows no statistically significant
+effect on current enrollment.
+
+When LGA fixed effects are included (Column 2), the model fit improves
+substantially (R-squared increases from 0.43 to 0.52), and several
+previously insignificant violence variables become significant. Exposure
+during the pre-birth window (17--9 months before birth) is now positive
+and significant at the 5\% level ($\hat{\beta} = 0.031$), and in-utero
+exposure is positive and significant at the 1\% level ($\hat{\beta} =
+0.039$). The early childhood effect is no longer statistically significant
+and the coefficient falls to near zero. The primary school age effect
+remains positive and significant, with a larger coefficient ($0.055$) than
+in the baseline model.
+
+Across both specifications, male students are significantly more likely to
+be enrolled in school (coefficient $\approx 0.04$--$0.05$, $p < 0.001$).
+The urban indicator is small and insignificant in the baseline but becomes
+larger and significant with fixed effects ($\hat{\delta} = 0.035$), as
+expected once we absorb time-invariant LGA-level confounders. All parental
+education variables are positive, and mother's and father's alive status
+are not statistically significant with LGA fixed effects. Distance to
+primary school has a statistically significant negative effect on
+enrollment; distance to junior secondary and senior secondary schools is
+not significant.
+
+% ---- Main regression table placeholder ---------------------
+% Export this from Python (e.g., using stargazer or modelsummary)
+% or Stata and paste here, or write it manually.
+
+\begin{table}[H]
+    \centering
+    \caption{OLS Estimates: Effect of Violence Exposure on School Enrollment}
+    \label{tab:attend_results}
+    \begin{threeparttable}
+        \begin{tabular}{lcc}
+            \toprule
+            & \multicolumn{2}{c}{Dependent variable: \textit{attend}} \\
+            \cmidrule(lr){2-3}
+            & (1) OLS & (2) OLS + LGA FE \\
+            \midrule
+            \multicolumn{3}{l}{\textit{Violence exposure indicators}} \\[0.3em]
+            Pre-birth ($-$17 to $-$9 months) & 0.004 & 0.031$^{**}$ \\
+                                          & (0.014) & (0.015) \\[0.3em]
+            In utero (0–9 months pre-birth) & 0.016 & 0.039$^{***}$ \\
+                                             & (0.013) & (0.014) \\[0.3em]
+            Early childhood (0–3 years) & $-$0.022$^{***}$ & 0.010 \\
+                                         & (0.007) & (0.010) \\[0.3em]
+            Preschool age (3–6 years) & $-$0.049$^{***}$ & $-$0.017 \\
+                                       & (0.007) & (0.010) \\[0.3em]
+            Primary school (6–12 years) & 0.019$^{***}$ & 0.055$^{***}$ \\
+                                         & (0.007) & (0.011) \\[0.3em]
+            Junior secondary (12–15 years) & 0.018 & 0.032 \\
+                                            & (0.019) & (0.023) \\[0.3em]
+            Senior secondary (15–18 years) & $-$0.019 & $-$0.115 \\
+                                            & (0.074) & (0.105) \\[0.5em]
+            Individual controls & Yes & Yes \\
+            LGA fixed effects   & No  & Yes \\
+            \midrule
+            Observations & 56,878 & 56,878 \\
+            R-squared    & 0.428  & 0.517  \\
+            \bottomrule
+        \end{tabular}
+        \begin{tablenotes}
+            \small
+            \item \textit{Notes:} OLS estimates with robust standard errors
+            in parentheses. Individual controls include age, age-squared,
+            gender, urban/rural, region, wealth quintile, parental
+            education and living status, Quranic/Tsangaya/Islamiyya school
+            attendance, late school start, disability indicators, and
+            distances to school. $^{*}p < 0.10$, $^{**}p < 0.05$,
+            $^{***}p < 0.01$.
+        \end{tablenotes}
+    \end{threeparttable}
+\end{table}
+
+\subsection{Educational Attainment}
+\label{sec:results_attainment}
+
+Table~\ref{tab:attainment_results} presents results for the
+\textit{highest\_enrolled} outcome---total years of schooling completed.
+
+In the baseline OLS (Column 1), nearly all violence regressors carry
+negative coefficients, with the exceptions of \textit{viol\_ps} (preschool,
+$\hat{\beta} = 0.154$, $p < 0.01$) and \textit{viol\_JS} (junior secondary,
+$\hat{\beta} = 0.052$, not significant). All violence variables except
+\textit{viol\_prim}, \textit{viol\_JS}, and \textit{viol\_SS} are
+statistically significant.
+
+The LGA fixed effects results (Column 2) tell a markedly different story.
+After absorbing LGA-level confounders, all violence indicators except
+\textit{viol\_SS} exhibit positive associations with educational attainment,
+and most are statistically significant at the 5\% level or better
+(\textit{viol\_uter\_p} and \textit{viol\_ech} are not significant). This
+reversal in sign across specifications suggests substantial negative
+selection of violence into low-performing LGAs: once we compare children
+within the same LGA, violence exposure is associated with more---not
+fewer---years of schooling. This result is difficult to interpret causally
+and points to important identification challenges discussed in
+Section~\ref{sec:conclusion}.
+
+Male students achieve more years of schooling than female students across
+both specifications (coefficient $\approx 0.014$, significant). Urban
+children achieve significantly more schooling, and the urban premium triples
+in magnitude with the introduction of LGA fixed effects. Similarly, the
+coefficient on \textit{region} increases from approximately 0.06 to 0.21
+with fixed effects, underscoring the importance of geographic controls.
+
+% ---- Attainment regression table placeholder ----------------
+\begin{table}[H]
+    \centering
+    \caption{OLS Estimates: Effect of Violence Exposure on Years of Schooling}
+    \label{tab:attainment_results}
+    \begin{threeparttable}
+        \begin{tabular}{lcc}
+            \toprule
+            & \multicolumn{2}{c}{Dependent variable: \textit{highest\_enrolled}} \\
+            \cmidrule(lr){2-3}
+            & (1) OLS & (2) OLS + LGA FE \\
+            \midrule
+            \multicolumn{3}{l}{\textit{Violence exposure indicators}} \\[0.3em]
+            Pre-birth ($-$17 to $-$9 months) & & \\[0.3em]
+            In utero (0–9 months pre-birth) & & \\[0.3em]
+            Early childhood (0–3 years) & & \\[0.3em]
+            Preschool age (3–6 years) & $0.154^{***}$ & \\[0.3em]
+            Primary school (6–12 years) & & \\[0.3em]
+            Junior secondary (12–15 years) & $0.052$ & \\[0.3em]
+            Senior secondary (15–18 years) & & \\[0.5em]
+            Individual controls & Yes & Yes \\
+            LGA fixed effects   & No  & Yes \\
+            \midrule
+            Observations & [N] & [N] \\
+            R-squared    & & \\
+            \bottomrule
+        \end{tabular}
+        \begin{tablenotes}
+            \small
+            \item \textit{Notes:} OLS estimates with robust standard errors
+            in parentheses. See Table~\ref{tab:attend_results} notes for
+            description of individual controls. Full regression output is
+            in Appendix~\ref{app:full_results}.
+            $^{*}p < 0.10$, $^{**}p < 0.05$, $^{***}p < 0.01$.
+        \end{tablenotes}
+    \end{threeparttable}
+\end{table}
+
+% ---- Placeholder: add figures here when ready ---------------
+% Example figure call — see main.tex for instructions:
+%
+% \begin{figure}[H]
+%     \centering
+%     \includegraphics[width=0.85\textwidth]{figures/coef_plot_attend.pdf}
+%     \caption{Violence Exposure Coefficients: School Enrollment}
+%     \label{fig:coef_attend}
+% \end{figure}
