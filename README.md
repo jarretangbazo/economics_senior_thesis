@@ -1,5 +1,5 @@
 # Education Under Fire
-### Conflict Exposure and Educational Attainment in Northern Nigeria
+### Conflict Exposure and Educational Attainment in Nigeria
 
 **Author:** Jarret Angbazo
 **Identification strategy:** Difference-in-Differences (DiD) using Boko Haram insurgency onset (2009)  
