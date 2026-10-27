@@ -1,35 +1,41 @@
 #!/usr/bin/env bash
 # =============================================================================
 # master.sh
-# Master script: runs the full Python to R pipeline end to end.
+# Runs the full pipeline end to end: Python notebooks (01–02), then R (03–05).
 #
-# Usage:
-#   bash master.sh              # run everything
-#   bash master.sh --python     # Python stage only
-#   bash master.sh --r          # R stage only
+# Usage (from anywhere):
+#   bash code/master.sh              # run everything
+#   bash code/master.sh --python     # notebooks only
+#   bash code/master.sh --r          # R scripts only
 #
+# Notebooks are executed in place, so their saved outputs reflect the latest run.
 # Logs are saved to output/logs/run_YYYYMMDD_HHMMSS.log
 # =============================================================================
 
 set -euo pipefail   # stop on error, undefined vars, and pipe failures
 
 # -----------------------------------------------------------------------------
-# Configuration
+# Configuration — paths are resolved from this script's location
 # -----------------------------------------------------------------------------
-PROJECT_ROOT="$HOME/Projects/economics_senior_thesis"
-PYTHON_DIR="$PROJECT_ROOT/python"
-R_DIR="$PROJECT_ROOT/R"
+CODE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_ROOT="$(dirname "$CODE_DIR")"
 LOG_DIR="$PROJECT_ROOT/output/logs"
 
-mkdir -p "$LOG_DIR"
-TIMESTAMP=$(date +"%Y%m%d_%H%M%S")
-LOG_FILE="$LOG_DIR/run_${TIMESTAMP}.log"
+# Use the project virtualenv if it exists, otherwise whatever jupyter is on PATH
+if [ -x "$PROJECT_ROOT/.venv/bin/jupyter" ]; then
+  JUPYTER="$PROJECT_ROOT/.venv/bin/jupyter"
+else
+  JUPYTER="jupyter"
+fi
 
-# Redirect all output to log file AND terminal
+mkdir -p "$LOG_DIR"
+LOG_FILE="$LOG_DIR/run_$(date +"%Y%m%d_%H%M%S").log"
+
+# Send all output to the log file AND the terminal
 exec > >(tee -a "$LOG_FILE") 2>&1
 
 echo "============================================================"
-echo " Education Under Fire — Full Pipeline"
+echo " Conflict and Educational Attainment in Nigeria — Pipeline"
 echo " Started: $(date)"
 echo " Log: $LOG_FILE"
 echo "============================================================"
@@ -49,64 +55,52 @@ for arg in "$@"; do
 done
 
 # -----------------------------------------------------------------------------
-# Stage 1: Python
+# Stage 1: Python notebooks
 # -----------------------------------------------------------------------------
+NOTEBOOKS=(
+  "01_dhs_clean:Cleaning DHS adult data"
+  "02_war_exposure:Building civil war exposure"
+)
+
 if [ "$RUN_PYTHON" = true ]; then
   echo ""
-  echo "=== Stage 1: Python pipeline ==================================="
-  cd "$PYTHON_DIR"
+  echo "=== Stage 1: Python notebooks =================================="
+  i=1
+  for entry in "${NOTEBOOKS[@]}"; do
+    nb="${entry%%:*}"
+    echo "[$i/${#NOTEBOOKS[@]}] ${entry#*:}..."
+    "$JUPYTER" nbconvert --to notebook --execute --inplace "$CODE_DIR/$nb.ipynb" --log-level=WARN
+    i=$((i + 1))
+  done
 
-  echo "[1/5] Cleaning ACLED data..."
-  python 01_acled_clean.py
-
-  echo "[2/5] Cleaning DHS data..."
-  python 02_dhs_clean.py
-
-  echo "[3/5] Geospatial merge..."
-  python 03_geospatial_merge.py
-
-  echo "[4/5] Building conflict exposure measures..."
-  python 04_conflict_exposure.py
-
-  echo "[5/5] Assembling analysis panel..."
-  python 05_panel_merge.py
-
-  PANEL="$PROJECT_ROOT/data/processed/analysis_panel.csv"
-  if [ ! -f "$PANEL" ]; then
-    echo "ERROR: analysis_panel.csv not found. Python pipeline may have failed."
+  if [ ! -f "$PROJECT_ROOT/data/processed/analysis_war.csv" ]; then
+    echo "ERROR: analysis_war.csv not found. Python stage may have failed."
     exit 1
   fi
-  echo "analysis_panel.csv confirmed."
-  cd "$PROJECT_ROOT"
+  echo "analysis_war.csv confirmed."
 fi
 
 # -----------------------------------------------------------------------------
 # Stage 2: R
+# Run from the project root so .Rprofile activates renv.
 # -----------------------------------------------------------------------------
+R_SCRIPTS=(
+  "03_descriptives:Descriptive statistics"
+  "04_main_results:Main estimates and event study"
+  "05_robustness:Robustness, placebo and heterogeneity"
+)
+
 if [ "$RUN_R" = true ]; then
   echo ""
-  echo "=== Stage 2: R pipeline ========================================"
-  cd "$R_DIR"
-
-  echo "[1/6] Descriptive statistics..."
-  Rscript 01_describe.R
-
-  echo "[2/6] Pre-trends check..."
-  Rscript 02_pretrends.R
-
-  echo "[3/6] Main DiD estimation..."
-  Rscript 03_main_did.R
-
-  echo "[4/6] Event study..."
-  Rscript 04_event_study.R
-
-  echo "[5/6] Robustness checks..."
-  Rscript 05_robustness.R
-
-  echo "[6/6] Exporting tables and figures..."
-  Rscript 06_tables_figures.R
-
+  echo "=== Stage 2: R ================================================="
   cd "$PROJECT_ROOT"
+  i=1
+  for entry in "${R_SCRIPTS[@]}"; do
+    script="${entry%%:*}"
+    echo "[$i/${#R_SCRIPTS[@]}] ${entry#*:}..."
+    Rscript "code/$script.R"
+    i=$((i + 1))
+  done
 fi
 
 # -----------------------------------------------------------------------------

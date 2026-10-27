@@ -1,0 +1,22 @@
+# Python dependencies for the Stage 1 notebooks.
+# Install from the project root with:  pip install -r code/requirements.txt
+
+# Data manipulation
+pandas>=2.0
+numpy>=1.24
+pyreadstat>=1.2         # read DHS Stata (.DTA) files
+
+# Geospatial
+geopandas>=1.0
+shapely>=2.0
+pyproj>=3.5
+pyogrio>=0.7            # shapefile I/O engine used by geopandas
+
+# Figures
+matplotlib>=3.7
+
+# Notebooks (master.sh executes them with nbconvert)
+jupyter>=1.0
+nbconvert>=7.0
+ipykernel>=6.0
+nbstripout>=0.6         # git filter: strips notebook outputs on commit
