@@ -35,7 +35,7 @@ LOG_FILE="$LOG_DIR/run_$(date +"%Y%m%d_%H%M%S").log"
 exec > >(tee -a "$LOG_FILE") 2>&1
 
 echo "============================================================"
-echo " Conflict and Educational Attainment in Nigeria — Pipeline"
+echo " Education Under Fire — Pipeline"
 echo " Started: $(date)"
 echo " Log: $LOG_FILE"
 echo "============================================================"

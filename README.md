@@ -1,5 +1,5 @@
-# Conflict and Educational Attainment in Nigeria
-### Evidence from the Nigerian Civil War (1967–70)
+# Education Under Fire
+### Conflict Exposure and Educational Attainment in Nigeria
 
 **Author:** Jarret Angbazo
 **Period of work:** August 2012 – June 2013 (uses only data released by mid-2013)
