@@ -1,9 +1,11 @@
 # Education Under Fire
+
 ### Conflict Exposure and Educational Attainment in Nigeria
 
 **Author:** Jarret Angbazo
-**Period of work:** August 2012 – June 2013 (uses only data released by mid-2013)
+
 **Identification strategy:** Difference-in-differences across region and birth cohort
+
 **Data:** Nigeria DHS 2003 and 2008 household rosters + state boundaries
 
 ---
@@ -118,8 +120,6 @@ bash code/master.sh --r          # R scripts only
 ## Git and Reproducibility
 
 Only `code/`, `output/`, this README and `renv.lock` are committed. Raw and processed data, `docs/`, environments and R project files stay local (see `.gitignore`).
-
-The `extended-2026` branch holds a later, larger version of the project (DHS 2003–2018, Boko Haram exposure from ACLED). It reads the files now in `data/raw/new_data/` from their original locations.
 
 A collaborator can reproduce the full pipeline by:
 1. Obtaining the DHS 2003 and 2008 files and placing them in `data/raw/dhs/` as shown above
