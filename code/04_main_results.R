@@ -59,11 +59,12 @@ modelsummary(
   gof_map  = GOF_MAP,
   add_rows = extra_rows,
   stars    = c("*" = 0.1, "**" = 0.05, "***" = 0.01),
-  title    = "Effect of the Nigerian Civil War on completed schooling",
+  title    = "Effect of the Nigerian Civil War on completed schooling \\label{tab:main}",
   notes    = glue("Columns 1-3: years of schooling; 4-6: completed primary. Adults born 1935-1963 in DHS 2003 and ",
                   "2008; partly exposed states excluded. State, birth-year and survey-wave FE and a sex control. ",
                   "SEs clustered by state in parentheses (stars use these). Permutation p-value: share of {N_PERM} ",
                   "random 5-state placebo regions with an estimate at least as large in absolute value."),
+  escape   = FALSE,   # keep the \label in the title
   output   = file.path(TABLES_DIR, "table_main_results.tex")
 )
 modelsummary(numbered, coef_map = COEF_LABELS[c("war_x_cohort", "war_x_years")], gof_map = GOF_MAP,
@@ -88,6 +89,14 @@ save_fig(fig_perm, "fig_permutation", width = 7, height = 4)
 # =============================================================================
 es_data <- filter(adults, partly_exposed == 0)
 
+# "cohort5::1950:war_region" -> "War region × born 1950-54"; the last bin holds 1975 only
+cohort_label <- function(x) {
+  start <- as.integer(str_extract(x, "(?<=cohort5::)\\d{4}"))
+  span  <- if_else(start + 4 > max(es_data$birth_year), as.character(start),
+                   glue("{start}-{str_sub(start + 4, 3, 4)}"))
+  case_when(!is.na(start) ~ glue("War region × born {span}"), x == "male" ~ "Male", TRUE ~ x)
+}
+
 es_models <- map(names(OUTCOMES), \(y) {
   feols(reg_formula(y, glue("i(cohort5, war_region, ref = {REF_COHORT}) + {CONTROLS}")),
         data = es_data, cluster = CLUSTER)
@@ -96,11 +105,12 @@ es_models <- map(names(OUTCOMES), \(y) {
 
 modelsummary(
   es_models,
-  coef_rename = \(x) str_replace(x, "cohort5::(\\d{4}):war_region", "War region × born \\1-"),
+  coef_rename = cohort_label,
   gof_map  = GOF_MAP,
   stars    = c("*" = 0.1, "**" = 0.05, "***" = 0.01),
-  title    = glue("Cohort event study: war-region schooling gap by birth cohort (reference: born {REF_COHORT}-{REF_COHORT + 4})"),
+  title    = glue("Cohort event study: war-region schooling gap by birth cohort (reference: born {REF_COHORT}-{REF_COHORT + 4}) \\label{{tab:eventstudy}}"),
   notes    = "State, birth-year and survey-wave FE and a sex control. SEs clustered by state.",
+  escape   = FALSE,   # keep the \label in the title
   output   = file.path(TABLES_DIR, "table_event_study.tex")
 )
 

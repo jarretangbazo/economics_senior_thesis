@@ -27,14 +27,14 @@ samples <- list(
 robustness_specs <- tribble(
   ~section,           ~spec,                                     ~sample,      ~region,            ~cohort,              ~weighted,
   "Specification",    "Baseline",                                "main",       "war_region",       "school_age_war",     FALSE,
-  "Specification",    "Wider war region (former Eastern Region and Mid-West)", "wider", "wider_war_region", "school_age_war", FALSE,
+  "Specification",    "Wider war region (incl. partly exposed)", "wider", "wider_war_region", "school_age_war", FALSE,
   "Specification",    "Drop ages ending in 0 or 5",              "no_heaping", "war_region",       "school_age_war",     FALSE,
   "Specification",    "DHS 2003 only",                           "wave_2003",  "war_region",       "school_age_war",     FALSE,
   "Specification",    "DHS 2008 only",                           "wave_2008",  "war_region",       "school_age_war",     FALSE,
   "Specification",    "Survey weights",                          "main",       "war_region",       "school_age_war",     TRUE,
-  "Placebo",          "Fake war in 1957-59 (born 1935-49 only)", "pre_war",    "war_region",       "school_age_placebo", FALSE,
-  "Heterogeneity",    "Women",                                   "women",      "war_region",       "school_age_war",     FALSE,
-  "Heterogeneity",    "Men",                                     "men",        "war_region",       "school_age_war",     FALSE
+  "Placebo",          "Placebo: fake war in 1957-59 (born 1935-49)", "pre_war",    "war_region",       "school_age_placebo", FALSE,
+  "Heterogeneity",    "Women only",                              "women",      "war_region",       "school_age_war",     FALSE,
+  "Heterogeneity",    "Men only",                                "men",        "war_region",       "school_age_war",     FALSE
 )
 
 message(glue("Running {nrow(robustness_specs) * length(OUTCOMES)} specifications with {N_PERM} permutations each..."))
@@ -63,18 +63,21 @@ fmt_est <- function(estimate, se, p) {
 
 robustness_table <- robustness |>
   mutate(cell = fmt_est(estimate, se, p), p_perm = number(p_perm, accuracy = 0.001)) |>
-  select(Section = section, Specification = spec, outcome, cell, p_perm) |>
+  select(Specification = spec, outcome, cell, p_perm) |>
   pivot_wider(names_from = outcome, values_from = c(cell, p_perm), names_glue = "{outcome} {.value}") |>
   rename_with(\(n) str_replace(n, " cell$", "")) |>
-  rename_with(\(n) str_replace(n, " p_perm$", ": permutation p")) |>
-  select(Section, Specification, starts_with("Years"), starts_with("Completed"))
+  rename_with(\(n) str_replace(n, " p_perm$", ": perm. p")) |>
+  select(Specification, starts_with("Years"), starts_with("Completed")) |>
+  rename_with(\(n) str_replace(n, "^Years of schooling", "Years")) |>
+  rename_with(\(n) str_replace(n, "^Completed primary", "Primary"))
 
 datasummary_df(
   robustness_table,
-  title  = "Robustness, placebo and heterogeneity",
+  title  = "Robustness, placebo and heterogeneity \\label{tab:robustness}",
   notes  = glue("War region × school-age-during-war coefficient (SE clustered by state) and permutation p-value ",
                 "({N_PERM} random placebo regions of the same size). Each row changes one element of the ",
                 "baseline (main table, columns 1 and 4). * p<0.1, ** p<0.05, *** p<0.01 (clustered SEs)."),
+  escape = FALSE,   # keep the \label in the title
   output = file.path(TABLES_DIR, "table_robustness.tex")
 )
 print(robustness_table, width = Inf)

@@ -40,6 +40,7 @@ cells <- main |>
 
 column_order <- c("War region: Before war (1935-49)", "War region: School-age in war (1950-63)",
                   "Rest of Nigeria: Before war (1935-49)", "Rest of Nigeria: School-age in war (1950-63)")
+short_names  <- c("War: born 1935-49", "War: born 1950-63", "Rest: born 1935-49", "Rest: born 1950-63")
 
 summary_table <- cells |>
   mutate(column = glue("{region}: {cohort}")) |>
@@ -51,14 +52,17 @@ summary_table <- cells |>
     across(-variable, \(x) if_else(variable %in% c("People", "States", "Birth year"),
                                    comma(x, accuracy = 1, big.mark = ""), number(x, accuracy = 0.01)))
   ) |>
-  select(Variable = variable, all_of(column_order))
+  select(Variable = variable, all_of(column_order)) |>
+  rename_with(\(n) short_names[match(n, column_order)], all_of(column_order))
 
 datasummary_df(
   summary_table,
-  title  = "Summary statistics by region and birth cohort (survey-weighted means)",
-  notes  = glue("Adults in DHS 2003 and 2008 household rosters. War region: Abia, Anambra, Ebonyi, Enugu, Imo. ",
-                "Rest of Nigeria excludes the partly exposed states (Akwa Ibom, Bayelsa, Cross River, Rivers, ",
+  title  = "Summary statistics by region and birth cohort (survey-weighted means) \\label{tab:summary}",
+  notes  = glue("Adults in DHS 2003 and 2008 household rosters. War: war region (Abia, Anambra, Ebonyi, Enugu, Imo); ",
+                "born 1950-63 were of school age (6-17) during the 1967-70 war. ",
+                "Rest: rest of Nigeria, excluding the partly exposed states (Akwa Ibom, Bayelsa, Cross River, Rivers, ",
                 "Delta, Edo)."),
+  escape = FALSE,   # keep the \label in the title
   output = file.path(TABLES_DIR, "table_summary_stats.tex")
 )
 print(summary_table)
