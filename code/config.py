@@ -13,8 +13,7 @@ from pathlib import Path
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 
 # -----------------------------------------------------------------------------
-# Raw data (only data released before mid-2013; later releases are in
-# data/raw/new_data/ and are not used)
+# Raw data
 # -----------------------------------------------------------------------------
 RAW_DIR        = PROJECT_ROOT / "data" / "raw"
 DHS_RAW_DIR    = RAW_DIR / "dhs"
@@ -27,15 +26,15 @@ DHS_PR_FILES = {
     2008: DHS_RAW_DIR / "NG_2008_DHS" / "NGPR53DT" / "NGPR53FL.DTA",
 }
 
-# State boundaries (for the map only)
+# State boundaries (for map)
 STATE_SHAPEFILE = SHAPEFILES_DIR / "nga_admin_boundaries.shp" / "nga_admin1.shp"
 
 # -----------------------------------------------------------------------------
-# Processed data (written by the notebooks)
+# Processed data
 # -----------------------------------------------------------------------------
 PROCESSED_DIR  = PROJECT_ROOT / "data" / "processed"
 DHS_ADULTS     = PROCESSED_DIR / "dhs_adults.csv"        # 01
-ANALYSIS_FILE  = PROCESSED_DIR / "analysis_war.csv"      # 02 — R reads this
+ANALYSIS_FILE  = PROCESSED_DIR / "analysis_war.csv"      # 02 — Read by R analysis scripts
 
 # -----------------------------------------------------------------------------
 # Outputs
@@ -52,8 +51,8 @@ SCHOOL_AGE    = (6, 17)                  # primary (6–12) through secondary (1
 BIRTH_YEARS   = (1935, 1975)             # cohorts kept for analysis
 PLACEBO_YEARS = [1957, 1958, 1959]       # fake war, ten years earlier
 
-# War region: the Igbo-majority states that remained under Biafran control
-# for most of the war (the former East Central State)
+# War region: Igbo-majority states that remained under Biafran control for most of the
+# war (the former East Central State)
 WAR_STATES = ["Abia", "Anambra", "Ebonyi", "Enugu", "Imo"]
 
 # Rest of the former Eastern Region (recaptured early in the war) and the
